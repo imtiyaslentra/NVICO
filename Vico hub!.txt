@@ -473,8 +473,21 @@ end
 -- DrRayLib
 local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
 
+if not DrRayLibrary then
+    error("DrRayLibrary failed to load.")
+end
+
 local window = DrRayLibrary:Load("March Hub", "Light") -- Ganti nama jendela menjadi "March Hub"
+
+if not window then
+    error("Failed to create window.")
+end
+
 local tab = window:AddTab("Main") -- Tambahkan tab baru dengan judul "Main"
+
+if not tab then
+    error("Failed to add tab.")
+end
 
 -- Toggle untuk mengaktifkan Auto Parry
 tab:newToggle("Auto Parry", "• Main Parry", false, function(toggleState)
@@ -529,3 +542,6 @@ UICorner.Parent = ImageButton
 ImageButton.MouseButton1Click:Connect(function()
     game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game)
 end)
+
+-- Jika Anda memiliki fungsi optimizePerformance(), pastikan untuk mendefinisikannya di sini atau menghapus pemanggilan jika tidak digunakan
+-- optimizePerformance() -- Pastikan fungsi ini didefinisikan atau dihapus
