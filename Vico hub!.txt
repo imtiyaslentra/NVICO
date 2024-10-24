@@ -529,11 +529,6 @@ Tabs.Main:AddButton({
     end,
 })
 
--- Setting window theme colors
-local mainColor = Color3.fromRGB(10, 30, 10) -- Main color
-local secondColor = Color3.fromRGB(50, 50, 10) -- Secondary color
-Window:SetTheme(mainColor, secondColor) -- Apply color theme
-
 -- Open the GUI window
 Window:Open()
 
