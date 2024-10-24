@@ -472,6 +472,10 @@ end
 
 -- Fluent UI Library
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+if not Fluent then
+    error("Failed to load Fluent library.")
+end
+
 local Window = Fluent:CreateWindow({
     Title = "March Hub",
     SubTitle = "by dawid",
@@ -552,96 +556,6 @@ ImageButton.Draggable = true
 
 -- Add UICorner for rounded corners
 UICorner.Parent = ImageButton
--- Fluent UI Library
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local Window = Fluent:CreateWindow({
-    Title = "March Hub",
-    SubTitle = "by dawid",
-    TabWidth = 160,
-    Size = UDim2.fromOffset(580, 460),
-    Acrylic = true,
-    Theme = "Light",
-})
-
--- Create Main Tab
-local Tabs = {
-    Main = Window:AddTab({ Title = "Main", Icon = "" }),
-}
-
--- Toggle for Auto Parry
-local AutoParryToggle = Tabs.Main:AddToggle("Auto Parry", {
-    Title = "• Main Parry",
-    Default = false,
-})
-
-AutoParryToggle:OnChanged(function(state)
-    auto_parry = state
-end)
-
--- Toggle for Visualizer
-local VisualizerToggle = Tabs.Main:AddToggle("Visualizer", {
-    Title = "• View Part",
-    Default = false,
-})
-
-VisualizerToggle:OnChanged(function(state)
-    visualize_Enabled = state
-end)
-
--- Toggle for Auto Spam
-local AutoSpamToggle = Tabs.Main:AddToggle("Auto Spam", {
-    Title = "• Main Spam",
-    Default = false,
-})
-
-AutoSpamToggle:OnChanged(function(state)
-    auto_spam = state
-end)
-
--- Button for Manual Spam
-Tabs.Main:AddButton({
-    Title = "Manual Spam",
-    Description = "• Main Spam",
-    Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/KNgpQxtv"))() -- Call function without assignment
-    end,
-})
-
--- Setting window theme colors
-local mainColor = Color3.fromRGB(10, 30, 10) -- Main color
-local secondColor = Color3.fromRGB(50, 50, 10) -- Secondary color
-Window:SetTheme(mainColor, secondColor) -- Apply color theme
-
--- Open the GUI window
-Window:Open()
-
--- Setup for ScreenGui to include ImageButton
-local ScreenGui = Instance.new("ScreenGui")
-local ImageButton = Instance.new("ImageButton")
-local UICorner = Instance.new("UICorner")
-
-ScreenGui.Parent = game.CoreGui
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
--- Configure ImageButton
-ImageButton.Parent = ScreenGui
-ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ImageButton.BorderSizePixel = 0
-ImageButton.Position = UDim2.new(0.120833337, 0, 0.0952890813, 0)
-ImageButton.Size = UDim2.new(0, 50, 0, 50)
-ImageButton.Image = "rbxassetid://83582647628443" -- Set image using decal ID
-ImageButton.Draggable = true
-
--- Add UICorner for rounded corners
-UICorner.Parent = ImageButton
-
--- Function to handle click event
-ImageButton.MouseButton1Click:Connect(function()
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game)
-end)
-
--- Uncomment if you have a performance optimization function
--- optimizePerformance() -- Ensure this function is defined or remove if not used
 
 -- Function to handle click event
 ImageButton.MouseButton1Click:Connect(function()
