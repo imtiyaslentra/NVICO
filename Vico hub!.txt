@@ -470,55 +470,70 @@ local function optimizePerformance()
     optimizeMemoryUsage()
 end
 
--- DrRayLib
-local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
+-- Fluent UI Library
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local Window = Fluent:CreateWindow({
+    Title = "March Hub",
+    SubTitle = "by dawid",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true,
+    Theme = "Light",
+})
 
-if not DrRayLibrary then
-    error("DrRayLibrary failed to load.")
-end
+-- Create Main Tab
+local Tabs = {
+    Main = Window:AddTab({ Title = "Main", Icon = "" }),
+}
 
-local window = DrRayLibrary:Load("March Hub", "Light") -- Ganti nama jendela menjadi "March Hub"
+-- Toggle for Auto Parry
+local AutoParryToggle = Tabs.Main:AddToggle("Auto Parry", {
+    Title = "• Main Parry",
+    Default = false,
+})
 
-if not window then
-    error("Failed to create window.")
-end
-
-local tab = window:AddTab("Main") -- Tambahkan tab baru dengan judul "Main"
-
-if not tab then
-    error("Failed to add tab.")
-end
-
--- Toggle untuk mengaktifkan Auto Parry
-tab:newToggle("Auto Parry", "• Main Parry", false, function(toggleState)
-    auto_parry = toggleState
+AutoParryToggle:OnChanged(function(state)
+    auto_parry = state
 end)
 
--- Toggle untuk Visualizer
-tab:newToggle("Visualizer", "• View Part", false, function(toggleState)
-    visualize_Enabled = toggleState
+-- Toggle for Visualizer
+local VisualizerToggle = Tabs.Main:AddToggle("Visualizer", {
+    Title = "• View Part",
+    Default = false,
+})
+
+VisualizerToggle:OnChanged(function(state)
+    visualize_Enabled = state
 end)
 
--- Toggle untuk Auto Spam
-tab:newToggle("Auto Spam", "• Main Spam", false, function(toggleState)
-    auto_spam = toggleState
+-- Toggle for Auto Spam
+local AutoSpamToggle = Tabs.Main:AddToggle("Auto Spam", {
+    Title = "• Main Spam",
+    Default = false,
+})
+
+AutoSpamToggle:OnChanged(function(state)
+    auto_spam = state
 end)
 
--- Button untuk Manual Spam
-tab:newButton("Manual Spam", "• Main Spam", function()
-    ManualSpam() -- Panggil fungsi tanpa penugasan
-end)
+-- Button for Manual Spam
+Tabs.Main:AddButton({
+    Title = "Manual Spam",
+    Description = "• Main Spam",
+    Callback = function()
+        ManualSpam() -- Call function without assignment
+    end,
+})
 
--- Mengatur tema jendela
-local mainColor = Color3.fromRGB(10, 30, 10) -- Warna utama
-local secondColor = Color3.fromRGB(50, 50, 10) -- Warna sekunder
+-- Setting window theme colors
+local mainColor = Color3.fromRGB(10, 30, 10) -- Main color
+local secondColor = Color3.fromRGB(50, 50, 10) -- Secondary color
+Window:SetTheme(mainColor, secondColor) -- Apply color theme
 
-window:SetTheme(mainColor, secondColor) -- Terapkan tema warna
+-- Open the GUI window
+Window:Open()
 
--- Membuka jendela GUI
-window:Open()
-
--- Konfigurasi ScreenGui untuk ImageButton
+-- Setup for ScreenGui to include ImageButton
 local ScreenGui = Instance.new("ScreenGui")
 local ImageButton = Instance.new("ImageButton")
 local UICorner = Instance.new("UICorner")
@@ -526,16 +541,16 @@ local UICorner = Instance.new("UICorner")
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Konfigurasi ImageButton
+-- Configure ImageButton
 ImageButton.Parent = ScreenGui
 ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 ImageButton.BorderSizePixel = 0
 ImageButton.Position = UDim2.new(0.120833337, 0, 0.0952890813, 0)
 ImageButton.Size = UDim2.new(0, 50, 0, 50)
-ImageButton.Image = "rbxassetid://83582647628443" -- Setel gambar menggunakan ID decal
+ImageButton.Image = "rbxassetid://83582647628443" -- Set image using decal ID
 ImageButton.Draggable = true
 
--- Tambahkan UICorner untuk sudut membulat
+-- Add UICorner for rounded corners
 UICorner.Parent = ImageButton
 
 -- Function to handle click event
@@ -543,5 +558,5 @@ ImageButton.MouseButton1Click:Connect(function()
     game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game)
 end)
 
--- Jika Anda memiliki fungsi optimizePerformance(), pastikan untuk mendefinisikannya di sini atau menghapus pemanggilan jika tidak digunakan
--- optimizePerformance() -- Pastikan fungsi ini didefinisikan atau dihapus
+-- Uncomment if you have a performance optimization function
+-- optimizePerformance() -- Ensure this function is defined or remove if not used
