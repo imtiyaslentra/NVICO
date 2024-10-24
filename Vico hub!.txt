@@ -471,7 +471,6 @@ local function optimizePerformance()
 end
 
 -- DrRayLib
-
 local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
 
 local window = DrRayLibrary:Load("March Hub", "Light") -- Ganti nama jendela menjadi "March Hub"
@@ -530,5 +529,3 @@ UICorner.Parent = ImageButton
 ImageButton.MouseButton1Click:Connect(function()
     game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game)
 end)
-end
-optimizePerformance()
