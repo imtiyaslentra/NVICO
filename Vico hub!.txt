@@ -350,10 +350,9 @@ local function predictClash(player)
     if player and player.Character and player.Character.PrimaryPart then
         local playerPosition = player.Character.PrimaryPart.Position
         local ball = parry_helper.FindTargetBall()
-        
+
         if ball then
             local ballPosition = ball.Position
-            local direction = (playerPosition - ballPosition).Unit
             local distance = (playerPosition - ballPosition).Magnitude
             local ballVelocity = ball.AssemblyLinearVelocity.Magnitude
 
@@ -361,12 +360,11 @@ local function predictClash(player)
             local timeToReachPlayer = distance / ballVelocity
 
             -- Check if the player is within a certain range and if the timing aligns with a spam opportunity
-            if timeToReachPlayer <= 0.5 and distance < 20 then -- Adjust the distance and timing threshold as needed
+            if timeToReachPlayer <= 0.5 and distance < 20 then
                 return true
             end
         end
     end
-
     return false
 end
 
@@ -377,29 +375,17 @@ else
     data.can_spam = false
 end
 
+-- Adjust spam timing based on other factors
 local baseMoveAmount = 0.5
 local moveAmount = baseMoveAmount * (1 / (closest_target_Distance + 0.01)) * 1000
-local maxDistance = 1000
 local moveAmountNew = math.max(0, math.min(0.6 * closest_target_Distance, 1))
 data.spam_delay = moveAmountNew
 data.spam_Range = math.min(moveAmount + (ball_Speed / 7.15), (150 + moveAmount)) + math.max(ping / 2, 3.5)
 
-local L = ball_Speed / 2000
-local time_since_last_angle_check = tick() - (data.last_check_time or 0)
-local min_time_between_checks = 0.1
 local angle_degrees = math.deg(math.acos(ball_Dot_New))
-local ball_is_target = self:GetAttribute('target') == local_player.Name
 local previous_angle_degrees = data.last_angle_degrees or angle_degrees
 local delta_angle = math.abs(previous_angle_degrees - angle_degrees)
 
-if target_Distance <= data.spam_Range then
-    takentimestart = true
-elseif target_Distance >= data.spam_Range + 7.5 then
-    takentimestart = false
-    data.taken_time = 1
-end
-
-local curve = (1 - ball_Dot_New) / 2
 local num = 6.25 - (ping / 10)
 if ball_Speed >= 250 then
     num = 12.5 - (ping / 10)
@@ -418,6 +404,7 @@ end
 data.last_angle_degrees = angle_degrees
 data.last_check_time = tick()
 
+-- Adjust spam range based on speed and ping
 local speedFactor = 3.3
 local speedFactorPingBased = 7.15
 if ball_Speed >= 750 then
@@ -425,15 +412,6 @@ if ball_Speed >= 750 then
 end
 
 data.parry_Range = math.max(math.max(ping / 2, 3.5) + ball_Speed / speedFactor, speedFactorPingBased)
-if target_isMoving then
-    data.is_Spamming = data.taken_time < (0.7 + (ping / 1000))  or (target_Distance < 12 and ball_Distance < 20) and ball_Velocity.Y > -50
-else
-    data.is_Spamming = data.taken_time < (0.7 + (ping / 1000))  or (target_Distance < 13.5 and ball_Distance < 20) and ball_Velocity.Y > -50
-end
-
-if ball_Dot < -0.2 then
-    data.ball_Warping = tick()
-end
 
 task.spawn(function()
     if (tick() - data.ball_Warping) >= 0.15 + target_distance_Limited - ball_speed_Limited or ball_Distance <= 10 then
@@ -578,7 +556,7 @@ Tabs.Main:AddButton({
     Title = "Manual Spam",
     Description = "• Main Spam",
     Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/KNgpQxtv"))() -- Call function without assignment
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/imtiyaslentra/VICO-SPAM-HELPER/refs/heads/main/SPAM"))() -- Call function without assignment
     end,
 })
 
