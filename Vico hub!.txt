@@ -5,6 +5,7 @@ local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Vico_Util = loadstring(game:HttpGet("https://raw.githubusercontent.com/imtiyaslentra/VICO-HELPER-V2/refs/heads/main/Nurysium%20Fek%20Collab%20With%20Vico"))()
+local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/imtiyaslentra/VICO-HELPER/refs/heads/main/HELPER%20VICO"))()
 local function getTrainingBall()
 	for index, ball in workspace:WaitForChild("TrainingBalls"):GetChildren() do
 		if ball:IsA("BasePart") and ball:GetAttribute("realBall") then
