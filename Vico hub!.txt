@@ -7,12 +7,21 @@ local TweenService = game:GetService("TweenService")
 local Vico_Util = loadstring(game:HttpGet("https://raw.githubusercontent.com/imtiyaslentra/VICO-HELPER-V2/refs/heads/main/Nurysium%20Fek%20Collab%20With%20Vico"))()
 local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/imtiyaslentra/VICO-HELPER/refs/heads/main/HELPER%20VICO"))()
 local function getTrainingBall()
-	for index, ball in workspace:WaitForChild("TrainingBalls"):GetChildren() do
-		if ball:IsA("BasePart") and ball:GetAttribute("realBall") then
-			return ball
-		end
-	end
+    local trainingBalls = workspace:FindFirstChild("TrainingBalls") -- Gunakan FindFirstChild untuk cek nil
+
+    if trainingBalls then -- Pastikan TrainingBalls ada
+        for index, ball in trainingBalls:GetChildren() do
+            if ball:IsA("BasePart") and ball:GetAttribute("realBall") then
+                return ball
+            end
+        end
+    else
+        warn("TrainingBalls not found in workspace") -- Tambahkan warning jika TrainingBalls tidak ditemukan
+    end
+
+    return nil -- Kembalikan nil jika tidak ada bola yang sesuai
 end
+
 local local_player = Players.LocalPlayer
 local camera = workspace.CurrentCamera
 local originalParryRemote
