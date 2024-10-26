@@ -470,8 +470,6 @@ local function optimizePerformance()
     optimizeMemoryUsage()
 end
 
-optimazePerformance()
-
 -- Load Fluent Library
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 if not Fluent then
@@ -580,3 +578,4 @@ Fluent:Notify({
     Duration = 5
 })
 		
+optimazePerformance()
