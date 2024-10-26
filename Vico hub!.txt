@@ -38,7 +38,7 @@ local ai_Enabled = false
 local auto_win = false
 local tp_hit = false
 local spectate_Enabled = false
-local skibidi = true
+local VicoLaw = true
 local takentimestart = false
 local Services = {game:GetService("AdService"),game:GetService("SocialService")}
 function initializate(dataaFolder_name)
@@ -84,8 +84,8 @@ local data = {
 	canParry = true,
 	modeParry = nil,
 	is_Spamming = false,
-	parry_Range = 30,
-	spam_Range = 13,  
+	parry_Range = 0,
+	spam_Range = 0,  
 	hit_Count = 0,
 	target_Count = 0,
 	hit_Time = tick(),
@@ -284,11 +284,11 @@ task.spawn(function()
 		self:GetAttributeChangedSignal('target'):Once(function()
 			data.canParry = true
 		end)
-		if self:GetAttribute('target') == local_player.Name and skibidi then
+		if self:GetAttribute('target') == local_player.Name and VicoLaw then
 			data.target_Count = data.target_Count + 1
-			skibidi = false
+			VicoLaw = false
 		elseif self:GetAttribute('target') ~= local_player.Name then
-			skibidi = true
+			VicoLaw = true
 		end
 		task.delay(0.2 + (ping / 100),function()
 			data.target_Count = data.target_Count - 1
@@ -299,12 +299,13 @@ task.spawn(function()
 		get_closest_entity(local_player.Character.PrimaryPart)
 		local player_Position = local_player.Character.PrimaryPart.Position
 		local ball_Position = self.Position
-		local ball_Velocity = self.AssemblyLinearVelocity
+                local timeToReachPlayer = distance / ballVelocity
+		local ball_Velocity = self.AssemblyLinearVelocitball.AssemblyLinearVelocity.Magnitude
 		if self:FindFirstChild("zoomies") then
 			ball_Velocity = self.zoomies.VectorVelocity
 		end
-		local ball_Direction = (local_player.Character.PrimaryPart.Position - ball_Position).Unit
-		local ball_Distance = (local_player.Character.PrimaryPart.Position - ball_Position).Magnitude
+		local ball_Direction = (playerPosition - ballPosition).Unit
+		local ball_Distance = (playerPosition - ballPosition).Magnitude
 		local target_ball_distance = (closest_Entity.HumanoidRootPart.Position - ball_Position).Magnitude
 		data.distance_player_to_ball = ball_Distance
 		local ball_DirectionNew
@@ -382,7 +383,9 @@ task.spawn(function()
 		if target_isMoving then
 			data.is_Spamming = data.taken_time < (0.7 + (ping / 1000))  or (target_Distance < 12 and ball_Distance < 20) and ball_Velocity.Y > -50
 		else
-			data.is_Spamming = data.taken_time < (0.7 + (ping / 1000))  or (target_Distance < 13.5 and ball_Distance < 20) and ball_Velocity.Y > -50
+			data.is_Spamming = (data.taken_time < (0.7 + (ping / 1000)) 
+    or (target_Distance < 13.5 and ball_Distance < 20 and ball_Velocity.Y > -50)
+    or (timeToReachPlayer <= 0.5 and distance < 20))
 		end
 		if ball_Dot < -0.2 then
 			data.ball_Warping = tick()
@@ -439,7 +442,9 @@ task.spawn(function()
 		end)
 	end)
 end)
+
 initializate("nurysium_temp")
+
 local function optimizePerformance()
     -- Boost FPS by disabling unnecessary features and reducing settings
     game:GetService("Workspace").StreamingEnabled = true
