@@ -84,8 +84,8 @@ local data = {
 	canParry = true,
 	modeParry = nil,
 	is_Spamming = false,
-	parry_Range = 0,
-	spam_Range = 0,  
+	parry_Range = 35,
+	spam_Range = 14,  
 	hit_Count = 0,
 	target_Count = 0,
 	hit_Time = tick(),
@@ -300,13 +300,12 @@ task.spawn(function()
 		local player_Position = local_player.Character.PrimaryPart.Position
 		local ball_Position = self.Position
                 local timeToReachPlayer = distance / ballVelocity
-		local ball_Velocity = self.AssemblyLinearVelocitball.AssemblyLinearVelocity.Magnitude
+		local ball_Velocity = self.AssemblyLinearVelocity
 		if self:FindFirstChild("zoomies") then
 			ball_Velocity = self.zoomies.VectorVelocity
 		end
-		local ball_Direction = (playerPosition - ballPosition).Unit
-		local ball_Distance = (playerPosition - ballPosition).Magnitude
-		local target_ball_distance = (closest_Entity.HumanoidRootPart.Position - ball_Position).Magnitude
+		local ball_Direction = (local_player.Character.PrimaryPart.Position - ball_Position).Unit
+		local ball_Distance = (local_player.Character.PrimaryPart.Position - ball_Position).Magnitude
 		data.distance_player_to_ball = ball_Distance
 		local ball_DirectionNew
 		local ball_DistanceNew
