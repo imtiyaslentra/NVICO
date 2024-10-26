@@ -472,91 +472,53 @@ end
 
 -- Load Fluent Library
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
-
--- Setup SaveManager for autosave
-SaveManager:SetLibrary(Fluent)
-SaveManager:IgnoreThemeSettings()
-SaveManager:SetFolder("VicoHub")
+if not Fluent then
+    error("Failed to load Fluent library.")
+end
 
 -- Create Main Window
 local Window = Fluent:CreateWindow({
-    Title = "Vico Hub!",
-    SubTitle = "Vico Hub is always evolving",
+    Title = "March Hub",
+    SubTitle = "https://discord.gg/EJB93G3jGe",
     TabWidth = 160,
-    Size = UDim2.fromOffset(580, 460),
+    Size = UDim2.fromOffset(500, 320),
     Acrylic = true,
     Theme = "Light",
+    MinimizeKey = Enum.KeyCode.End
 })
 
 -- Create Main Tab
 local Tabs = {
-    Main = Window:AddTab({ Title = "Main", Icon = "" }),
+    Main = Window:AddTab({ Title = "Main", Icon = "home" }),
 }
 
--- Load saved settings on startup
-local function LoadSettings()
-    local autoParryEnabled = SaveManager:Get("AutoParry") or false
-    local visualizerEnabled = SaveManager:Get("Visualizer") or false
-    local autoSpamEnabled = SaveManager:Get("AutoSpam") or false
-
-    AutoParryToggle:SetValue(autoParryEnabled)
-    VisualizerToggle:SetValue(visualizerEnabled)
-    AutoSpamToggle:SetValue(autoSpamEnabled)
-end
-
--- Toggle for Auto Parry
-local AutoParryToggle = Tabs.Main:AddToggle("AutoParry", {
-    Title = "• Main Parry",
+-- Add Toggles for functionality
+local MainTab = Tabs.Main
+local AutoParryToggle = MainTab:AddToggle("AutoParry", {
+    Title = "Auto Parry",
+    Description = "• Main Parry",
     Default = false,
+    Callback = function(state)
+        getgenv().auto_parry = state
+    end
 })
 
-AutoParryToggle:OnChanged(function(state)
-    getgenv().auto_parry = state
-    SaveManager:Set("AutoParry", state) -- Save state
-end)
-
--- Toggle for Visualizer
-local VisualizerToggle = Tabs.Main:AddToggle("Visualizer", {
-    Title = "• View Part",
+local VisualizerToggle = MainTab:AddToggle("Visualizer", {
+    Title = "Visualizer",
+    Description = "• View Part",
     Default = false,
+    Callback = function(state)
+        getgenv().visualize_Enabled = state
+    end
 })
 
-VisualizerToggle:OnChanged(function(state)
-    getgenv().visualize_Enabled = state
-    SaveManager:Set("Visualizer", state) -- Save state
-end)
-
--- Toggle for Auto Spam
-local AutoSpamToggle = Tabs.Main:AddToggle("AutoSpam", {
-    Title = "• Main Spam",
-    Default = false,
-})
-
-AutoSpamToggle:OnChanged(function(state)
-    getgenv().auto_spam = state
-    SaveManager:Set("AutoSpam", state) -- Save state
-end)
-
--- Button for Manual Spam
-Tabs.Main:AddButton({
-    Title = "Manual Spam",
+local AutoSpamToggle = MainTab:AddToggle("AutoSpam", {
+    Title = "Auto Spam",
     Description = "• Main Spam",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/imtiyaslentra/VICO-SPAM-HELPER/refs/heads/main/SPAM"))()
-    end,
-})
-
--- Open the GUI window
-Window:Open()
-LoadSettings()
-
--- Add Notification for Script Load
-Fluent:Notify({
-    Title = "Vico Hub!",
-    Content = "The script has been loaded successfully.",
-    Duration = 5
+    Default = false,
+    Callback = function(state)
+        getgenv().auto_spam = state
+    end
 })
 
 -- Setup for ScreenGui to include ImageButton
@@ -564,16 +526,17 @@ local ScreenGui = Instance.new("ScreenGui")
 local ImageButton = Instance.new("ImageButton")
 local UICorner = Instance.new("UICorner")
 
+-- Configure the ScreenGui
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Configure ImageButton
+-- Configure the ImageButton
 ImageButton.Parent = ScreenGui
 ImageButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 ImageButton.BorderSizePixel = 0
 ImageButton.Position = UDim2.new(0.120833337, 0, 0.0952890813, 0)
 ImageButton.Size = UDim2.new(0, 50, 0, 50)
-ImageButton.Image = "rbxassetid://83582647628443" -- Set image using decal ID
+ImageButton.Image = "rbxassetid://83582647628443" -- Set the image using the decal ID
 ImageButton.Draggable = true
 
 -- Add UICorner for rounded corners
@@ -581,13 +544,15 @@ UICorner.Parent = ImageButton
 
 -- Function to handle click event
 ImageButton.MouseButton1Click:Connect(function()
-    -- Simulate pressing the 'End' key
     game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game)
-
-    -- Toggle the auto_parry state
-    getgenv().auto_parry = not getgenv().auto_parry 
-    AutoParryToggle:SetValue(getgenv().auto_parry) -- Update toggle state in GUI
 end)
 
--- Call optimizePerformance function
+-- Notify user that the script has been loaded
+Fluent:Notify({
+    Title = "March Hub",
+    Content = "The script has been loaded successfully.",
+    Duration = 5
+})
+
+-- Optimize performance
 optimizePerformance()
