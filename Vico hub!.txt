@@ -470,12 +470,23 @@ local function optimizePerformance()
     optimizeMemoryUsage()
 end
 
--- Fluent UI Library
+optimazePerformance()
+
+-- Load Fluent Library
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 if not Fluent then
     error("Failed to load Fluent library.")
 end
 
+-- Setup SaveManager for autosave
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+SaveManager:SetLibrary(Fluent)
+SaveManager:SetFolder("VicoHub") -- Change folder name as needed
+SaveManager:IgnoreThemeSettings() -- Ignore theme settings for autosave
+SaveManager:SetIgnoreIndexes({}) -- Ignore specific indexes if needed
+SaveManager:LoadAutoloadConfig() -- Load configuration on startup
+
+-- Create Main Window
 local Window = Fluent:CreateWindow({
     Title = "Vico Hub!",
     SubTitle = "Vico Hub is always evolving",
@@ -491,33 +502,36 @@ local Tabs = {
 }
 
 -- Toggle for Auto Parry
-local AutoParryToggle = Tabs.Main:AddToggle("Auto Parry", {
+local AutoParryToggle = Tabs.Main:AddToggle("AutoParry", {
     Title = "• Main Parry",
-    Default = false,
+    Default = SaveManager:Get("AutoParry") or false,
 })
 
 AutoParryToggle:OnChanged(function(state)
     auto_parry = state
+    SaveManager:Set("AutoParry", state) -- Save state
 end)
 
 -- Toggle for Visualizer
 local VisualizerToggle = Tabs.Main:AddToggle("Visualizer", {
     Title = "• View Part",
-    Default = false,
+    Default = SaveManager:Get("Visualizer") or false,
 })
 
 VisualizerToggle:OnChanged(function(state)
     visualize_Enabled = state
+    SaveManager:Set("Visualizer", state) -- Save state
 end)
 
 -- Toggle for Auto Spam
-local AutoSpamToggle = Tabs.Main:AddToggle("Auto Spam", {
+local AutoSpamToggle = Tabs.Main:AddToggle("AutoSpam", {
     Title = "• Main Spam",
-    Default = false,
+    Default = SaveManager:Get("AutoSpam") or false,
 })
 
 AutoSpamToggle:OnChanged(function(state)
     auto_spam = state
+    SaveManager:Set("AutoSpam", state) -- Save state
 end)
 
 -- Button for Manual Spam
@@ -525,7 +539,7 @@ Tabs.Main:AddButton({
     Title = "Manual Spam",
     Description = "• Main Spam",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/imtiyaslentra/VICO-SPAM-HELPER/refs/heads/main/SPAM"))() -- Call function without assignment
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/imtiyaslentra/VICO-SPAM-HELPER/refs/heads/main/SPAM"))()
     end,
 })
 
@@ -554,8 +568,15 @@ UICorner.Parent = ImageButton
 
 -- Function to handle click event
 ImageButton.MouseButton1Click:Connect(function()
-    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game)
+    -- Simulate the action that was previously handled with VirtualInputManager
+    auto_parry = not auto_parry -- Toggle auto_parry state
+    AutoParryToggle:SetValue(auto_parry) -- Update toggle state in GUI
 end)
 
-optimazePerformance()
+-- Add Notification for Script Load
+Fluent:Notify({
+    Title = "Vico Hub!",
+    Content = "The script has been loaded successfully.",
+    Duration = 5
+})
 		
