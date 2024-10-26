@@ -472,17 +472,13 @@ end
 
 -- Load Fluent Library
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-if not Fluent then
-    error("Failed to load Fluent library.")
-end
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 -- Setup SaveManager for autosave
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 SaveManager:SetLibrary(Fluent)
-SaveManager:SetFolder("VicoHub") -- Change folder name as needed
-SaveManager:IgnoreThemeSettings() -- Ignore theme settings for autosave
-SaveManager:SetIgnoreIndexes({}) -- Ignore specific indexes if needed
-SaveManager:LoadAutoloadConfig() -- Load configuration on startup
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetFolder("VicoHub")
 
 -- Create Main Window
 local Window = Fluent:CreateWindow({
@@ -499,36 +495,47 @@ local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "" }),
 }
 
+-- Load saved settings on startup
+local function LoadSettings()
+    local autoParryEnabled = SaveManager:Get("AutoParry") or false
+    local visualizerEnabled = SaveManager:Get("Visualizer") or false
+    local autoSpamEnabled = SaveManager:Get("AutoSpam") or false
+
+    AutoParryToggle:SetValue(autoParryEnabled)
+    VisualizerToggle:SetValue(visualizerEnabled)
+    AutoSpamToggle:SetValue(autoSpamEnabled)
+end
+
 -- Toggle for Auto Parry
 local AutoParryToggle = Tabs.Main:AddToggle("AutoParry", {
     Title = "• Main Parry",
-    Default = SaveManager:Get("AutoParry") or false,
+    Default = false,
 })
 
 AutoParryToggle:OnChanged(function(state)
-    auto_parry = state
+    getgenv().auto_parry = state
     SaveManager:Set("AutoParry", state) -- Save state
 end)
 
 -- Toggle for Visualizer
 local VisualizerToggle = Tabs.Main:AddToggle("Visualizer", {
     Title = "• View Part",
-    Default = SaveManager:Get("Visualizer") or false,
+    Default = false,
 })
 
 VisualizerToggle:OnChanged(function(state)
-    visualize_Enabled = state
+    getgenv().visualize_Enabled = state
     SaveManager:Set("Visualizer", state) -- Save state
 end)
 
 -- Toggle for Auto Spam
 local AutoSpamToggle = Tabs.Main:AddToggle("AutoSpam", {
     Title = "• Main Spam",
-    Default = SaveManager:Get("AutoSpam") or false,
+    Default = false,
 })
 
 AutoSpamToggle:OnChanged(function(state)
-    auto_spam = state
+    getgenv().auto_spam = state
     SaveManager:Set("AutoSpam", state) -- Save state
 end)
 
@@ -543,6 +550,14 @@ Tabs.Main:AddButton({
 
 -- Open the GUI window
 Window:Open()
+LoadSettings()
+
+-- Add Notification for Script Load
+Fluent:Notify({
+    Title = "Vico Hub!",
+    Content = "The script has been loaded successfully.",
+    Duration = 5
+})
 
 -- Setup for ScreenGui to include ImageButton
 local ScreenGui = Instance.new("ScreenGui")
@@ -566,16 +581,13 @@ UICorner.Parent = ImageButton
 
 -- Function to handle click event
 ImageButton.MouseButton1Click:Connect(function()
-    -- Simulate the action that was previously handled with VirtualInputManager
-    auto_parry = not auto_parry -- Toggle auto_parry state
-    AutoParryToggle:SetValue(auto_parry) -- Update toggle state in GUI
+    -- Simulate pressing the 'End' key
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.End, false, game)
+
+    -- Toggle the auto_parry state
+    getgenv().auto_parry = not getgenv().auto_parry 
+    AutoParryToggle:SetValue(getgenv().auto_parry) -- Update toggle state in GUI
 end)
 
--- Add Notification for Script Load
-Fluent:Notify({
-    Title = "Vico Hub!",
-    Content = "The script has been loaded successfully.",
-    Duration = 5
-})
-		
-optimazePerformance()
+-- Call optimizePerformance function
+optimizePerformance()
